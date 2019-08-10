@@ -2,6 +2,7 @@ package mikejyg.cloep;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -62,6 +63,8 @@ public class ArgsParser {
 	
 	private boolean terminateFlag;
 	
+	private String args[];
+	
 	///////////////////////////////////////////////////////////////////////////
 	
 	public ArgsParser() {
@@ -78,7 +81,7 @@ public class ArgsParser {
 	 * @param optArgDescription If it is not null, then a argument to the option is required.
 	 * @param handler
 	 */
-	public void addOption(Character optChar, String optStr, String description, String optArgDescription, Consumer<String> handler) {
+	public void addOptionWithArg(Character optChar, String optStr, String description, String optArgDescription, Consumer<String> handler) {
 		OptionStruct optionStruct=new OptionStruct();
 
 		optionStruct.setShortOption(optChar);
@@ -101,8 +104,23 @@ public class ArgsParser {
 			longOptionsMap.put(optStr, optionStruct);
 		
 	}
+
+	/**
+	 * Though the handler has no argument, the closest thing Java offers is Consumer<>, so it is chosen,
+	 *   and the argument passed to the handler will be null.
+	 *   
+	 * @param optChar
+	 * @param optStr
+	 * @param description
+	 * @param handler
+	 */
+	public void addOptionWithoutArg(Character optChar, String optStr, String description, Consumer<String> handler) {
+		addOptionWithArg(optChar, optStr, description, null, handler);
+	}
 	
 	public void Parse(String args[]) throws ParseException {
+		this.args = args;
+		
 		terminateFlag = false;
 		
 		argsIt = new ArgsIterator(args);
@@ -276,5 +294,12 @@ public class ArgsParser {
 		}
 	}
 
+	/**
+	 * return the remaining(unparsed) args in a string array.
+	 * @return
+	 */
+	public String [] getRemainingArgs() {
+		return Arrays.copyOfRange(args, getArgsIt().getArgIdx(), args.length);
+	}
 	
 }

@@ -1,0 +1,26 @@
+help messages: 
+--help	: print help messages
+-v	: verbose
+-o, --additionalOptions parameter	: additionalOptions
+	parameter: a comma separated list of addtional options
+
+to print the help message...
+additional options: good
+additional options: good
+additional options: def
+additional options: def
+additional options: def
+verbose is set.
+ParseException: illegal option: k
+at argument: -vk
+at short option: k
+remaining args:[]
+ParseException: illegal option: illegalOption
+at argument: --illegalOption
+remaining args:[1, 2, 3]
+non-option arg: selfTest
+next arg: 123
+remaining args: [123, 456]
+verbose is set.
+next short option: c
+unknown arg: unknown

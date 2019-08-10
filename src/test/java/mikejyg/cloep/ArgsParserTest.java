@@ -1,8 +1,11 @@
 package mikejyg.cloep;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -40,17 +43,17 @@ public class ArgsParserTest {
 
 	public ArgsParserTest() {
 		// long only
-		argsParser.addOption(null, "help", "print help messages", null, str->{
+		argsParser.addOptionWithoutArg(null, "help", "print help messages", str->{
 			out.println("to print the help message...");
 		});
 
 		// short only
-		argsParser.addOption('v', null, "verbose", null, str->{
+		argsParser.addOptionWithoutArg('v', null, "verbose", str->{
 			out.println("verbose is set.");
 		});
 
 		// long and short
-		argsParser.addOption('o', "additionalOptions", "additionalOptions", "a comma separated list of addtional options", str->{
+		argsParser.addOptionWithArg('o', "additionalOptions", "additionalOptions", "a comma separated list of addtional options", str->{
 			out.println("additional options: " + str);
 		});
 		
@@ -77,6 +80,8 @@ public class ArgsParserTest {
 				out.println("at short option: " + errArg.charAt( argsParser.getShortOptionIterator().getOptIdx()-1 ) );
 			}
 			
+			out.println("remaining args:" + Arrays.toString(argsParser.getRemainingArgs()) );
+			
 		}
 	
 	}
@@ -93,7 +98,7 @@ public class ArgsParserTest {
 				, "--additionalOptions=def", "--additionalOptions", "def", "additionalOptions=def"
 				, "-vk"} );
 		
-		parse( new String[]{"--illegalOption"});
+		parse( new String[]{"--illegalOption", "1",  "2", "3"});
 		
 		parse( new String[]{"selfTest", "123", "456"});
 		
@@ -118,41 +123,28 @@ public class ArgsParserTest {
 	 * @throws IOException
 	 */
 	public void test() throws IOException {
-		String goldenOutput="help messages: " + System.lineSeparator() + 
-				"--help	: print help messages" + System.lineSeparator() + 
-				"-v	: verbose" + System.lineSeparator() + 
-				"-o, --additionalOptions parameter	: additionalOptions" + System.lineSeparator() + 
-				"	parameter: a comma separated list of addtional options" + System.lineSeparator() + 
-				"" + System.lineSeparator() + 
-				"to print the help message..." + System.lineSeparator() + 
-				"additional options: good" + System.lineSeparator() + 
-				"additional options: good" + System.lineSeparator() + 
-				"additional options: def" + System.lineSeparator() + 
-				"additional options: def" + System.lineSeparator() + 
-				"additional options: def" + System.lineSeparator() + 
-				"verbose is set." + System.lineSeparator() + 
-				"ParseException: illegal option: k" + System.lineSeparator() + 
-				"at argument: -vk" + System.lineSeparator() + 
-				"at short option: k" + System.lineSeparator() + 
-				"ParseException: illegal option: illegalOption" + System.lineSeparator() + 
-				"at argument: --illegalOption" + System.lineSeparator() + 
-				"non-option arg: selfTest" + System.lineSeparator() + 
-				"next arg: 123" + System.lineSeparator() + 
-				"remaining args: [123, 456]" + System.lineSeparator() + 
-				"verbose is set." + System.lineSeparator() + 
-				"next short option: c" + System.lineSeparator() + 
-				"unknown arg: unknown" + System.lineSeparator();
-			
+
 		String output = printToString((ps)->{test(ps);});
-	
-		assert(goldenOutput.contentEquals(output));
+		System.out.print(output);
 		
+		// compare output with golden
+		try ( BufferedReader goldenReader = new BufferedReader(
+				new InputStreamReader(this.getClass().getResourceAsStream("/argsParserTestGolden.out")));
+			  BufferedReader outputReader = new BufferedReader(new StringReader(output)); ) {
+		
+			String goldenStr;
+			while ( (goldenStr = goldenReader.readLine()) != null ) {
+				assert( goldenStr.contentEquals(outputReader.readLine()) );
+			}
+		}
+		
+		System.out.println("test() passed.");
 	}
 	
 	//////////////////////////////////////////////////
 	
-	public static void main(String[] args) {
-		new ArgsParserTest().test(System.out);
+	public static void main(String[] args) throws IOException {
+		new ArgsParserTest().test();
 	}
 	
 	
