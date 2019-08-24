@@ -118,7 +118,7 @@ public class ArgsParser {
 		addOptionWithArg(optChar, optStr, description, null, handler);
 	}
 	
-	public void Parse(String args[]) throws ParseException {
+	public void parse(String args[]) throws ParseException {
 		this.args = args;
 		
 		terminateFlag = false;

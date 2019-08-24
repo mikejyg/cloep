@@ -68,7 +68,7 @@ public class ArgsParserTest {
 	
 	public void parse(String [] args) {
 		try {
-			argsParser.Parse(args);
+			argsParser.parse(args);
 			
 		} catch (ParseException e) {
 			out.println("ParseException: " + e.getMessage());

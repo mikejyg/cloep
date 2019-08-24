@@ -7,7 +7,7 @@ popd
 
 outFile=argsParserTest.out
 
-java -cp ../build/classes/java/test\;../build/resources/test\;../build/libs/cloep.jar mikejyg.cloep.ArgsParserTest | tee $outFile
+java -cp ../build/classes/java/test:../build/resources/test:../build/libs/cloep.jar mikejyg.cloep.ArgsParserTest | tee $outFile
 
 echo comparing with golden...
 diff golden/$outFile $outFile
