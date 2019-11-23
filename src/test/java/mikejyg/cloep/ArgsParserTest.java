@@ -1,18 +1,12 @@
 package mikejyg.cloep;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import org.junit.Test;
-
-import mikejyg.cloep.ArgsParser;
 import mikejyg.cloep.ArgsParser.ParseException;
 
 /**
@@ -116,7 +110,6 @@ public class ArgsParserTest {
 		
 	}		
 
-	@Test
 	/**
 	 * run the test, and compare it with the golden results.
 	 * 
@@ -126,19 +119,6 @@ public class ArgsParserTest {
 
 		String output = printToString((ps)->{test(ps);});
 		System.out.print(output);
-		
-		// compare output with golden
-		try ( BufferedReader goldenReader = new BufferedReader(
-				new InputStreamReader(this.getClass().getResourceAsStream("/argsParserTestGolden.out")));
-			  BufferedReader outputReader = new BufferedReader(new StringReader(output)); ) {
-		
-			String goldenStr;
-			while ( (goldenStr = goldenReader.readLine()) != null ) {
-				assert( goldenStr.contentEquals(outputReader.readLine()) );
-			}
-		}
-		
-		System.out.println("test() passed.");
 	}
 	
 	//////////////////////////////////////////////////

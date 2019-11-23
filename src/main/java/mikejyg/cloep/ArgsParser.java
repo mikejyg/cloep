@@ -78,7 +78,7 @@ public class ArgsParser {
 	 * @param optChar The short option character. If null, then it is not used.
 	 * @param optStr The long option string. If null, then it is not used.
 	 * @param description 
-	 * @param optArgDescription If it is not null, then a argument to the option is required.
+	 * @param optArgDescription Not null. (internally) If it is null, then this option has no arg.
 	 * @param handler
 	 */
 	public void addOptionWithArg(Character optChar, String optStr, String description, String optArgDescription, Consumer<String> handler) {
